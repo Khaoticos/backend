@@ -26,7 +26,7 @@ export class Created<T> implements ResponseBody<T> {
 	}
 }
 
-export class Unathorized<T> implements ResponseBody<T> {
+export class Unauthorized<T> implements ResponseBody<T> {
 	statusCode = 401;
 	response: T | string = "Unathorized";
 

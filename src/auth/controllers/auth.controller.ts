@@ -1,7 +1,7 @@
 import { Profile } from "passport-google-oauth20";
-import {ResponseBody, IToken } from "../commom/responses/responses";
 import { AuthService } from "../services/auth.service";
 import { Request, Response } from "express";
+import { IToken, ResponseBody } from "../../commom/responses/responses";
 
 const authService = new AuthService();
 
@@ -54,8 +54,9 @@ export class AuthController {
 	sendToken = async(req: Request, res: Response) => {
 		try {
 			const {mail} = req.params;
-			const token: ResponseBody<IToken> = await authService.sendToken(mail);
-			return res.status(token.statusCode).json(token.response);
+			await authService.sendToken(mail, (cb: ResponseBody<any>) => {
+				return res.status(cb.statusCode).json(cb.response);
+			});
 		}
 		catch (e) {
 			return res.status(500).json(e);

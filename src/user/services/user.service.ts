@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 import { UserRepository } from "../repositories/user.repository";
-import { BadRequest, Conflict, Created, NotFound, OK, ResponseBody } from "../commom/responses/responses";
 import bcrypt from "bcrypt";
+import { BadRequest, Conflict, Created, NotFound, OK, ResponseBody } from "../../commom/responses/responses";
 
 const userRepository = new UserRepository();
 

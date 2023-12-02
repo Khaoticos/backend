@@ -1,22 +1,24 @@
-import { UserRepository } from "../repositories/user.repository";
+
 import { Ilogin } from "../models/login.models";
-import { BadRequest, NotFound, OK,  ResponseBody, Unathorized } from "../commom/responses/responses";
 import { Profile } from "passport-google-oauth20";
-import { UserService } from "./user.service";
 import Jwt from "jsonwebtoken";
 import { TokenRepository } from "../repositories/token.repository";
-import { accesSecret, accessTokenExpiration, refreshSecret, refreshTokenExpiration, validationTokenExpiration } from "../config/token.config";
 import {Channel, Role} from "@prisma/client";
 import bcrypt from "bcrypt";
 import { ValidationTokenRepository } from "../repositories/validation-token.repository";
 import axios from "axios";
+import { UserRepository } from "../../user/repositories/user.repository";
+import { UserService } from "../../user/services/user.service";
+import { BadRequest, NotFound, OK, ResponseBody, Unauthorized } from "../../commom/responses/responses";
+import { accesSecret, accessTokenExpiration, refreshSecret, refreshTokenExpiration, validationTokenExpiration } from "../../config/token.config";
+import { MailerProvider } from "../../notification/providers/mailer/mailer.provider";
 
 const userRepository = new UserRepository();
 const userService = new UserService();
 const tokenRepository = new TokenRepository();
 const validationTokenRepository = new ValidationTokenRepository();
+const mailerProvider = new MailerProvider();
 
-const NOTIFICATION_URL = process.env.NOTIFICAION_URL ||"http://localhost:3005/mail";
 export class AuthService {
 
 	issueAccessToken = async(payload: any) => {
@@ -99,13 +101,13 @@ export class AuthService {
 	refreshToken = async(token:string): Promise<ResponseBody<any>> => {
 
 		const tokenDB = await tokenRepository.getUnique({token});
-		if (!tokenDB) return new Unathorized("Refresh token não encontrado no DB");
+		if (!tokenDB) return new Unauthorized("Refresh token não encontrado no DB");
 
 		await tokenRepository.delete({token});
        
 		//TODO: TEM QUE COMPARAR O USERiD DO TOKEN COM ALGUM APSSADO PELO APP
 		const user = await userRepository.getUnique({id: tokenDB.userId});
-		if (!user) return new Unathorized("Nenhum usuário associado ao token");
+		if (!user) return new Unauthorized("Nenhum usuário associado ao token");
        
 		const accessToken = await this.issueAccessToken({login: user?.login, userID: user?.id });
 		const refreshToken = await this.issueRefreshToken({login: user?.login}, user?.id);
@@ -113,10 +115,10 @@ export class AuthService {
 		return new OK({accessToken, refreshToken});
 	};
 
-	sendToken = async(mail:string): Promise<ResponseBody<any>> => {
+	sendToken = async(mail:string, callback: any) => {
 
 		const user = await userRepository.getUnique({email: mail});
-		if (!user) return new NotFound("Nenhum usuário associado ao email");
+		if (!user) callback(new NotFound("Nenhum usuário associado ao email"));
 
 		const token = await this.generateRandomNumber();
 		const createdAt = new Date();
@@ -125,15 +127,9 @@ export class AuthService {
 
 		const  res = await validationTokenRepository.register({channel: Channel.EMAIL,  token, receiver: mail, createdAt, valid: true, expiresAt})
 
-		if (!res) return new BadRequest("Não foi possível criar o token");
-		await axios.post(NOTIFICATION_URL, 
-			{
-				emailTo: mail,
-				token: `${token}`
-			}
-		);
-		return new OK(res);
-	
+		if (!res) callback(new BadRequest("Não foi possível criar o token"));
+		await mailerProvider.sendEmail( {emailTo: mail, token: `${token}`}, callback);
+
 	};
 
 	validateToken = async(mail:string, token: string): Promise<ResponseBody<any>> => {

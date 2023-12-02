@@ -1,7 +1,8 @@
 import {Router} from "express";
 import { UserController } from "../controllers/user.controller";
-import { userValidator } from "../commom/validators/user.validator";
-import { validationErrors } from "../commom/validators/validation-errors";
+import { userValidator } from "../../commom/validators/user.validator";
+import { validationErrors } from "../../commom/validators/validation-errors";
+
 
 export const userRoute = Router();
 

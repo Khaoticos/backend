@@ -2,11 +2,11 @@ import express from "express";
 import dotenv from "dotenv";
 
 import "./config/passport.config";
-import { routes } from "./routes/index.routes";
+import { routes } from "./index.routes";
 
 dotenv.config();
 const app = express();
-const PORT: number = Number(process.env.PORT) | 3004;
+const PORT: number = Number(process.env.PORT) | 3003;
 
 
 app.use(express.json());
