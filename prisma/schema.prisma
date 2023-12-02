@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String                @id  
+  name                String                
+  login               String                @unique
+  email               String                @unique
+  password            String
+  role                Role                  @default(USER)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @default(now())
+
+  @@index([login])
+}
+
+model Token {
+  token      String   @id 
+  userId     String
+  expiresAt  DateTime
+}
+
+model Validation_token {
+  id                  String                @id
+  channel             Channel
+  token               Int
+  receiver            String                
+  createdAt           DateTime              @default(now())
+  valid               Boolean
+  expiresAt           DateTime
+}
+
+model Diary {
+  id         String   @id
+  userID     String
+  emotion    String
+  subemotion String
+  socialEmotion             String?
+  emotionalRange            String
+  emotionDescription        String?
+  thoughts                  String
+  thoughtsDescription       String?
+  thoughtsOrigin            ThoughtsOrigin @default(UNKNOWN)
+  thoughtsFactsDescription  String?
+  behaviourDescription      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  @@index([userID])
+}
+
+enum ThoughtsOrigin {
+  FACTS
+  EMOTIONS
+  UNKNOWN
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Channel {
+  EMAIL
+  PHONE
+}
