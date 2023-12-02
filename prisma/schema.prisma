@@ -45,11 +45,11 @@ model Diary {
   emotion    String
   subemotion String
   socialEmotion             String?
-  emotionalRange            String
+  emotionalRange            String?
   emotionDescription        String?
-  thoughts                  String
+  thoughts                  String?
   thoughtsDescription       String?
-  thoughtsOrigin            ThoughtsOrigin @default(UNKNOWN)
+  thoughtsOrigin            ThoughtsOrigin? @default(UNKNOWN)
   thoughtsFactsDescription  String?
   behaviourDescription      String?
   createdAt  DateTime @default(now())

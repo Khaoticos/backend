@@ -20,6 +20,13 @@ export class UserService {
 		return new OK(user);
 	};
 
+	exists = async(filter: Partial<User>): Promise<boolean> => {
+		const user = await userRepository.getUnique(filter);
+
+		if (!user) return false;
+		return true;
+	};
+
 
 
 	register = async(fields: Omit<User, "id">): Promise<ResponseBody<User>> => {
