@@ -1,14 +1,16 @@
 # EXAMPLE FILE - NOT WORKING!
 
-FROM node:12.18.1
+FROM node:18-alpine
  
-WORKDIR /app
+# WORKDIR /app
  
-COPY package.json package.json
-COPY package-lock.json package-lock.json
+COPY package.json  package-lock.json ./
+COPY ./prisma ./prisma
  
 RUN npm install
  
 COPY . .
- 
-CMD [ "node", "server.js" ]
+# RUN npm install pm2 -g
+RUN npm run build
+EXPOSE 3003
+CMD [ "node", "dist/index.js" ]

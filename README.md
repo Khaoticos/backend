@@ -1,13 +1,14 @@
 
 - [HUG.U - BACK-END](#hugu---back-end)
-  - [Como rodar o projeto:](#como-rodar-o-projeto)
+  - [Como rodar o projeto localmente:](#como-rodar-o-projeto-localmente)
+  - [Como rodar o projeto docker:](#como-rodar-o-projeto-docker)
   - [Formatação](#formatação)
   - [Mudanças no banco de dados](#mudanças-no-banco-de-dados)
   - [Ambientes](#ambientes)
 
 # HUG.U - BACK-END
 
-## Como rodar o projeto:
+## Como rodar o projeto localmente:
 
 1. baixar dependências
 ```bash
@@ -17,6 +18,18 @@ npm i
 2. Rodar o projeto
 ```bash
 npm run start:dev
+```
+
+## Como rodar o projeto docker:
+
+1. criar o container
+```bash
+ docker build -t test .
+```
+
+1. Rodar o projeto
+```bash
+docker run -it -p 3003:3003 test
 ```
 
 ## Formatação
