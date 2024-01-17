@@ -7,7 +7,10 @@ export class DiaryRepository {
 
 	getAll = async(filter: Partial<Diary>) => {
 		const diary = await prisma.diary.findMany({
-			where: filter
+			where: filter,
+			orderBy: {
+				createdAt: "desc"
+			}
 		});
 		return diary;
 	};

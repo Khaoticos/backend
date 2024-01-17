@@ -8,8 +8,8 @@ export const diaryRoute = Router();
 
 const diaryController = new DiaryController();
 
-diaryRoute.get("/", diaryController.getAll);
-diaryRoute.get("/:id", diaryController.getById);
+diaryRoute.get("/:userId", diaryController.getAll);
+diaryRoute.get("/register/:id", diaryController.getById);
 diaryRoute.post("/", diaryValidator, validationErrors, diaryController.register);
 diaryRoute.put("/:id", diaryController.update);
 diaryRoute.delete("/:id", diaryController.delete);

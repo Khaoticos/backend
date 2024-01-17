@@ -11,6 +11,9 @@ export class DiaryController {
 	getAll = async(req: Request, res: Response) => {
 		try {
 			const filter = req.query;
+			const {userId} = req.params;
+			filter.userID = userId;
+			
 			const diary: ResponseBody<Diary[]> = await diaryService.getAll(filter);
             
 			return res.status(diary.statusCode).json(diary.response);
