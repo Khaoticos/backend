@@ -1,13 +1,31 @@
 import {Diary, PrismaClient} from "@prisma/client";
 import { v4 } from "uuid";
 
+import logger from "../../config/logger";
+
 const prisma = new PrismaClient();
 
 export class DiaryRepository {
 
-	getAll = async(filter: Partial<Diary>) => {
+	getAll = async() => {
 		const diary = await prisma.diary.findMany({
-			where: filter,
+			orderBy: {
+				createdAt: "desc"
+			}
+		});
+		return diary;
+	};
+
+	getByFilter = async(filter: Partial<Diary>) => {
+		const query = {
+			...filter, 
+			subemotion: filter.subemotion?.length ? {hasEvery: filter.subemotion} : undefined, 
+			thoughts: filter.thoughts?.length ? {hasEvery: filter.thoughts}: undefined
+		};
+		logger.info("query", query);
+	
+		const diary = await prisma.diary.findMany({
+			where: query,
 			orderBy: {
 				createdAt: "desc"
 			}
@@ -23,24 +41,15 @@ export class DiaryRepository {
 	};
     
 	register = async(fields: Omit<Diary, "id">) => {
-		const {userID, emotion, subemotion, socialEmotion, emotionalRange, emotionDescription, thoughts, thoughtsDescription, thoughtsOrigin, thoughtsFactsDescription, behaviourDescription } = fields;
+		const data = {
+			...fields, 
+			id: v4(), 
+			createdAt: new Date(),
+			updatedAt: new Date()
+		};
+		
 		const diary = await prisma.diary.create({
-			data: {
-				id: v4(),
-				userID,
-				emotion,
-				subemotion,
-				socialEmotion,
-				emotionalRange,
-				emotionDescription,
-				thoughts,
-				thoughtsDescription,
-				thoughtsOrigin,
-				thoughtsFactsDescription,
-				behaviourDescription,
-				createdAt: new Date(),
-				updatedAt: new Date(),
-			}
+			data
 		});
 		return diary;
 	};

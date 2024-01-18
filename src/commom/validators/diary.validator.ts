@@ -8,7 +8,7 @@ export const diaryValidator = [
 		.isString().withMessage("emotion deve ser uma string"),
 	body("subemotion")
 		.exists({ values: "falsy" }).withMessage("subemotion é obrigatório")
-		.isString().withMessage("subemotion deve ser uma string"),
+		.isArray().withMessage("subemotion deve ser uma array de strings"),
 	body("socialEmotion")
 		.optional({ values: "falsy"}).isString().withMessage("socialEmotin deve ser uma string"),
 	body("emotionalRange")
@@ -16,7 +16,8 @@ export const diaryValidator = [
 	body("emotionalDescription")
 		.optional({ values: "falsy"}).isString().withMessage("emotionalDescription deve ser uma string"),
 	body("thoughts")
-		.optional({ values: "falsy"}).isString().withMessage("thoughts deve ser uma string"),
+		.optional({ values: "falsy"})
+		.isArray().withMessage("thoughts deve ser uma array de strings"),
 	body("thoughtsDescription")
 		.optional({ values: "falsy"}).isString().withMessage("thoughtsDescription deve ser uma string"),
 	body("thoughtsOrigin")

@@ -4,17 +4,29 @@ import {Diary} from "@prisma/client";
 import { OptionsService } from "../services/options.service.";
 import { ResponseBody } from "../../commom/responses/responses";
 
+
 const diaryService = new DiaryService();
 const optionsService = new OptionsService();
 
 export class DiaryController {
 	getAll = async(req: Request, res: Response) => {
 		try {
-			const filter = req.query;
-			const {userId} = req.params;
-			filter.userID = userId;
-			
-			const diary: ResponseBody<Diary[]> = await diaryService.getAll(filter);
+			const diary: ResponseBody<Diary[]> = await diaryService.getAll();
+            
+			return res.status(diary.statusCode).json(diary.response);
+		}
+		catch (e) {
+			return res.status(500).json(e);
+		}
+	};
+
+	getByFilter = async(req: Request, res: Response) => {
+		try {
+			const {userID} = req.params;
+			const {thoughts, subemotion} = req.body;
+			const filter: Partial<Diary> = {...req.query, userID, thoughts, subemotion};
+	
+			const diary: ResponseBody<Diary[]> = await diaryService.getByFilter(filter);
             
 			return res.status(diary.statusCode).json(diary.response);
 		}

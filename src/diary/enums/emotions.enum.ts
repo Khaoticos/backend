@@ -1,3 +1,5 @@
+import { Diary } from "@prisma/client";
+
 
 
 const EMOTIONS: ISubemotion = {

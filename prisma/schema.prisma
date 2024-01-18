@@ -43,11 +43,11 @@ model Diary {
   id         String   @id
   userID     String
   emotion    String
-  subemotion String
+  subemotion String[]
   socialEmotion             String?
   emotionalRange            String?
   emotionDescription        String?
-  thoughts                  String?
+  thoughts                  String[]
   thoughtsDescription       String?
   thoughtsOrigin            ThoughtsOrigin? @default(UNKNOWN)
   thoughtsFactsDescription  String?

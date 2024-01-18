@@ -11,8 +11,15 @@ const diaryRepository = new DiaryRepository();
 const userService = new UserService();
 
 export class DiaryService {
-	getAll = async(filter: Partial<Diary>): Promise<ResponseBody<Diary[]>> => {
-		const diary = await diaryRepository.getAll(filter);
+	getAll = async(): Promise<ResponseBody<Diary[]>> => {
+		const diary = await diaryRepository.getAll();
+
+		if (diary.length == 0) return new NotFound("Nenhum diário encontrado");
+		return new OK(diary) ;
+	};
+
+	getByFilter = async(filter:  Partial<Diary>): Promise<ResponseBody<Diary[]>> => {
+		const diary = await diaryRepository.getByFilter(filter);
 
 		if (diary.length == 0) return new NotFound("Nenhum diário encontrado");
 		return new OK(diary) ;
