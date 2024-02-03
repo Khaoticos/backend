@@ -5,7 +5,7 @@ import { IToken, ResponseBody } from "../../commom/responses/responses";
 
 const authService = new AuthService();
 
-const APP_URL= `http://localhost:3000`
+const APP_URL= "http://localhost:3000";
 export class AuthController {
 	login = async(req: Request, res: Response) => {
 		try {

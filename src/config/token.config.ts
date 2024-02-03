@@ -3,4 +3,4 @@ export const refreshSecret = process.env.REFRESH_TOKEN_SECRET_KEY || "default_se
 export const accessTokenExpiration = process.env.ACCESS_TOKEN_EXPIRATION_IN_SECONDS || "30";
 export const refreshTokenExpiration = process.env.REFRESH_TOKEN_EXPIRATION_IN_SECONDS || "300";
 
-export const validationTokenExpiration = process.env.VALIDATION_TOKEN_EXPIRATION_IN_SECONDS || "300"
+export const validationTokenExpiration = process.env.VALIDATION_TOKEN_EXPIRATION_IN_SECONDS || "300";

@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import {Diary} from "@prisma/client";
 import { OptionsService } from "../services/options.service.";
 import { ResponseBody } from "../../commom/responses/responses";
+import { IPrismaPagination } from "../../commom/interfaces/interfaces";
 
 
 const diaryService = new DiaryService();
@@ -24,9 +25,10 @@ export class DiaryController {
 		try {
 			const {userID} = req.params;
 			const {thoughts, subemotion} = req.body;
-			const filter: Partial<Diary> = {...req.query, userID, thoughts, subemotion};
-	
-			const diary: ResponseBody<Diary[]> = await diaryService.getByFilter(filter);
+			const {skip, take, ...otherFilters} = req.query;
+			const filter: Partial<Diary> = {...otherFilters, userID, thoughts, subemotion};
+			const pagination: IPrismaPagination = {skip: skip? Number(skip): undefined, take: take? Number(take): undefined};
+			const diary: ResponseBody<Diary[]> = await diaryService.getByFilter(filter, pagination);
             
 			return res.status(diary.statusCode).json(diary.response);
 		}

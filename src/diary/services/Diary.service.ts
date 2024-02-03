@@ -1,4 +1,5 @@
 
+import { IPrismaPagination } from "../../commom/interfaces/interfaces";
 import { BadRequest, Created, NotFound, OK, ResponseBody } from "../../commom/responses/responses";
 import logger from "../../config/logger";
 import { UserService } from "../../user/services/user.service";
@@ -18,8 +19,8 @@ export class DiaryService {
 		return new OK(diary) ;
 	};
 
-	getByFilter = async(filter:  Partial<Diary>): Promise<ResponseBody<Diary[]>> => {
-		const diary = await diaryRepository.getByFilter(filter);
+	getByFilter = async(filter:  Partial<Diary>, pagination: IPrismaPagination): Promise<ResponseBody<Diary[]>> => {
+		const diary = await diaryRepository.getByFilter(filter, pagination);
 
 		if (diary.length == 0) return new NotFound("Nenhum diário encontrado");
 		return new OK(diary) ;

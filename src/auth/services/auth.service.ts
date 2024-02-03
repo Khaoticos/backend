@@ -6,7 +6,6 @@ import { TokenRepository } from "../repositories/token.repository";
 import {Channel, Role} from "@prisma/client";
 import bcrypt from "bcrypt";
 import { ValidationTokenRepository } from "../repositories/validation-token.repository";
-import axios from "axios";
 import { UserRepository } from "../../user/repositories/user.repository";
 import { UserService } from "../../user/services/user.service";
 import { BadRequest, NotFound, OK, ResponseBody, Unauthorized } from "../../commom/responses/responses";
@@ -125,7 +124,7 @@ export class AuthService {
 		const expiresAt = new Date();
 		expiresAt.setSeconds(expiresAt.getSeconds() + Number(validationTokenExpiration)); 
 
-		const  res = await validationTokenRepository.register({channel: Channel.EMAIL,  token, receiver: mail, createdAt, valid: true, expiresAt})
+		const  res = await validationTokenRepository.register({channel: Channel.EMAIL,  token, receiver: mail, createdAt, valid: true, expiresAt});
 
 		if (!res) callback(new BadRequest("Não foi possível criar o token"));
 		await mailerProvider.sendEmail( {emailTo: mail, token: `${token}`}, callback);

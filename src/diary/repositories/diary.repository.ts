@@ -2,6 +2,7 @@ import {Diary, PrismaClient} from "@prisma/client";
 import { v4 } from "uuid";
 
 import logger from "../../config/logger";
+import { IPrismaPagination } from "../../commom/interfaces/interfaces";
 
 const prisma = new PrismaClient();
 
@@ -16,15 +17,17 @@ export class DiaryRepository {
 		return diary;
 	};
 
-	getByFilter = async(filter: Partial<Diary>) => {
+	getByFilter = async(filter: Partial<Diary>, pagination: IPrismaPagination) => {
 		const query = {
 			...filter, 
 			subemotion: filter.subemotion?.length ? {hasEvery: filter.subemotion} : undefined, 
 			thoughts: filter.thoughts?.length ? {hasEvery: filter.thoughts}: undefined
 		};
 		logger.info("query", query);
-	
+		logger.info("pagination", pagination);
 		const diary = await prisma.diary.findMany({
+			skip: pagination.skip,
+			take: pagination.take,
 			where: query,
 			orderBy: {
 				createdAt: "desc"
