@@ -21,7 +21,8 @@ export class DiaryRepository {
 		const query = {
 			...filter, 
 			subemotion: filter.subemotion?.length ? {hasEvery: filter.subemotion} : undefined, 
-			thoughts: filter.thoughts?.length ? {hasEvery: filter.thoughts}: undefined
+			thoughts: filter.thoughts?.length ? {hasEvery: filter.thoughts}: undefined,
+			emotionalRange: filter.emotionalRange?.length ? {hasEvery: filter.emotionalRange}: undefined
 		};
 		logger.info("query", query);
 		logger.info("pagination", pagination);
@@ -50,7 +51,7 @@ export class DiaryRepository {
 			createdAt: new Date(),
 			updatedAt: new Date()
 		};
-		
+
 		const diary = await prisma.diary.create({
 			data
 		});

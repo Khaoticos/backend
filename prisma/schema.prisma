@@ -45,7 +45,7 @@ model Diary {
   emotion    String
   subemotion String[]
   socialEmotion             String?
-  emotionalRange            String?
+  emotionalRange            Int[]
   emotionDescription        String?
   thoughts                  String[]
   thoughtsDescription       String?

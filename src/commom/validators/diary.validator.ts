@@ -12,7 +12,8 @@ export const diaryValidator = [
 	body("socialEmotion")
 		.optional({ values: "falsy"}).isString().withMessage("socialEmotin deve ser uma string"),
 	body("emotionalRange")
-		.optional({ values: "falsy"}).isString().withMessage("emotionalRange deve ser uma string"),
+		.exists({ values: "falsy" }).withMessage("emotionalRange é obrigatório")
+		.isArray().withMessage("emotionalRange deve ser um array de inteiros"),
 	body("emotionalDescription")
 		.optional({ values: "falsy"}).isString().withMessage("emotionalDescription deve ser uma string"),
 	body("thoughts")
