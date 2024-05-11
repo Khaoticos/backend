@@ -47,7 +47,6 @@ export class DiaryRepository {
 	register = async(fields: Omit<Diary, "id">) => {
 		const data = {
 			...fields, 
-			id: v4(), 
 			createdAt: new Date(),
 			updatedAt: new Date()
 		};

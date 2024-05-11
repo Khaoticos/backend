@@ -13,10 +13,11 @@ export class ValidationTokenRepository {
 	};
 
 	getUnique = async(fields: Partial<Validation_token>): Promise<Validation_token | null> => {
-		const token = await prisma.validation_token.findUnique({
+		const token = await prisma.validation_token.findMany({
 			where: fields
 		});
-		return token;
+		if (token.length == 1) return token[0];
+		return null;
 	};
 
 	getFirst = async(fields: Partial<Validation_token>): Promise<Validation_token | null> => {
@@ -31,7 +32,6 @@ export class ValidationTokenRepository {
 		const {token, channel, receiver, expiresAt, createdAt, valid } = fields;
 		const newToken = await prisma.validation_token.create({
 			data: {
-				id: v4(),
 				channel,
 				token,
 				receiver,

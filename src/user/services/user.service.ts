@@ -39,7 +39,6 @@ export class UserService {
 		}
 
 		fields.password = await bcrypt.hash(fields.password, 10);
-
 		const user = await userRepository.register(fields);
 		if (!user) return new BadRequest("Não foi possível criar o usuário");
 		

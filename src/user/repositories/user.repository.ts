@@ -1,5 +1,4 @@
 import { PrismaClient, User } from "@prisma/client";
-import { v4 } from "uuid";
 
 const prisma = new PrismaClient();
 
@@ -13,18 +12,17 @@ export class UserRepository {
 	};
 
 	getUnique = async(fields: Partial<User>): Promise<User | null> => {
-		const user = await prisma.user.findUnique({
+		const user = await prisma.user.findMany({
 			where: fields
 		});
-
-		return user;
+		if (user.length == 1) return user[0];
+		return null;
 	};
     
 	register = async(fields: Omit<User, "id">) => {
 		const {email,name, password } = fields;
 		const user = await prisma.user.create({
 			data: {
-				id: v4(),
 				name,
 				login: email,
 				email,

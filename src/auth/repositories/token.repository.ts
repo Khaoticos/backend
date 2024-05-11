@@ -12,13 +12,14 @@ export class TokenRepository {
 	};
 
 	getUnique = async(fields: Partial<Token>): Promise<Token | null> => {
-		const token = await prisma.token.findUnique({
+		const token = await prisma.token.findMany({
 			where: fields
 		});
-		return token;
+		if (token.length == 1) return token[0];
+		return null;
 	};
     
-	register = async(fields: Token) => {
+	register = async(fields: Omit<Token, "id">) => {
 		const {token, userId, expiresAt } = fields;
 		const newToken = await prisma.token.create({
 			data: {
